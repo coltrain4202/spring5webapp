@@ -10,6 +10,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * Created by jt on 5/16/17.
+ */
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -23,34 +26,35 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         this.publisherRepository = publisherRepository;
     }
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        initData();
+    }
+
     private void initData(){
-        //Eric
-        Publisher publisher = new Publisher("Harper Collins","1234");
+
+        Publisher publisher = new Publisher();
+        publisher.setName("foo");
+        publisher.setAddress("12th Street, LA");
         publisherRepository.save(publisher);
 
-
-        Author eric = new Author("Eric","Evans");
-        Book ddd = new Book("Domain Driven Design","1234",publisher);
-
+        //Eric
+        Author eric = new Author("Eric", "Evans");
+        Book  ddd = new Book("Domain Driven Design", "1234", publisher);
         eric.getBooks().add(ddd);
         ddd.getAuthors().add(eric);
 
         authorRepository.save(eric);
         bookRepository.save(ddd);
 
+
         //Rod
-        Author rod = new Author("Rod","Johnson");
-        Book noEJB = new Book("J2EE Development without EJB","23444",publisher);
+        Author rod = new Author("Rod", "Johnson");
+        Book noEJB = new Book("J2EE Development without EJB", "23444", publisher );
         rod.getBooks().add(noEJB);
         noEJB.getAuthors().add(rod);
 
-
         authorRepository.save(rod);
         bookRepository.save(noEJB);
-    }
-
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        initData();
     }
 }
